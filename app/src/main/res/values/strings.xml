@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Covid DI</string>
+    <string name="StatTitle">Статистика</string>
+    <string name="StatTitle2">Динамика заболеваемости</string>
+    <string-array name="Country">
+        <item>Мир</item>
+        <item>Россия</item>
+        <item>США</item>
+        <item>Франция</item>
+        <item>Англия</item>
+    </string-array>
+    <string name="ConfTitle">Подтвержденные \n случаи</string>
+    <string name="RecovTitle">Выздоровевших</string>
+    <string name="DeathTitle">Смертей</string>
+    <string name="InfoBut">Ознакомьтесь с информацией о коронавирусе</string>
+    <string name="TestBut">Пройдите тест на знание короновируса</string>
+
+</resources>
