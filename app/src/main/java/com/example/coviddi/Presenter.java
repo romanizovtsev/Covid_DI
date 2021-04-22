@@ -1,10 +1,13 @@
 package com.example.coviddi;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,12 +20,11 @@ import static java.lang.Math.abs;
 public class Presenter {
     private MainActivity view;
     private final model model;
-   Map<String,String> map=new HashMap<>();
-    int flag=0;
+
     public Presenter(MainActivity view1)
     {
         this.view=view1;
-        model=new model();
+        model=new model(this);
     }
     public void attachView(MainActivity mainActivity) {
         view = mainActivity;
@@ -32,54 +34,37 @@ public class Presenter {
     public void detachView() {
         view = null;
     }
-    public void getInfoToday(String country,String status,String Date)
+    public void loadInfo(String country)
     {
+        Date dateNow = new Date(System.currentTimeMillis()-24*60*60*1000);
+        Date DateYers=  new Date(System.currentTimeMillis()-2*24*60*60*1000);
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
+        model.getFromSQL(country,"deaths",formatForDateNow.format(DateYers));
+        Log.e("ДАТА",formatForDateNow.format(dateNow));
+        model.getInfoToday(country,"confirmed",formatForDateNow.format(DateYers));
+        model.getInfoToday(country,"confirmed",formatForDateNow.format(dateNow));
+        model.getInfoToday(country,"recovered",formatForDateNow.format(DateYers));
+        model.getInfoToday(country,"recovered",formatForDateNow.format(dateNow));
+        model.getInfoToday(country,"deaths",formatForDateNow.format(dateNow));
+        model.getInfoToday(country,"deaths",formatForDateNow.format(DateYers));
 
-        NetworkService.getInstance()
-                .getJSONApi()
-                .getPost(country,status)
-                .enqueue(new Callback<post1>() {
-
-                    @Override
-                    public void onResponse(@NonNull Call<post1> call, @NonNull Response<post1> response) {
-                        post1 post = response.body();
-                                //view.showInfo(status,post.getAll().getDates().get(Date)+"");
-                        if(!map.containsKey(status)) {
-                            map.put(status, post.getAll().getDates().get(Date) + "");
-                            Log.e(status,"Первый занос");
-
-                        }
-                        else {
-                            map.put(status, abs(Integer.parseInt(post.getAll().getDates().get(Date) + "") - Integer.parseInt(map.get(status))) + "");
-                        Log.e("Выполнено вычитание", status);
-                        flag++;
-                        Log.e("dddddddddddddd",flag+"");
-
-                        }
-                        if((map.size()==3)&&(flag==3)){
-                            view.showInfo(map);
-                            flag=0;
-                            Log.e("вызвана","Шоу инфо");
-                        }
-
-                    }
-
-
-                    @Override
-                    public void onFailure(@NonNull Call<post1> call, @NonNull Throwable t) {
-
-
-                        t.printStackTrace();
-
-                    }
-                });
-
+    }
+    public void showInfo(Map<String,String> map)
+    {    for (Map.Entry<String, String> pair : map.entrySet())
+    {
+        String key = pair.getKey();                      //ключ
+        switch(key)
+        { case "confirmed": view.ShowNumbConf(pair.getValue()); break;
+            case "recovered": view.ShowNumbRecov(pair.getValue()); break;
+            case "deaths": view.ShowNumbDeath(pair.getValue()); break;
+        }
+    }
 
 
     }
-    public void raznost (String status,int value)
 
-    {
-
-    }
+public Context getContexts()
+{
+    return view.getApplicationContext();
+}
 }

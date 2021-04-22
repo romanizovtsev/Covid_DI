@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.coviddi.DataContract.DataDbHelper;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,12 +33,12 @@ private Presenter presenter;
         setContentView(R.layout.startactivity);
         TextView tv=findViewById(R.id.textView6);
 
-
+       DataDbHelper dh=new DataDbHelper(this);
         NumbConf=findViewById(R.id.NumbConf);
         NumbRecov=findViewById(R.id.NumbRecov);
         NumbDeath=findViewById(R.id.NumbDeath);
 presenter=new Presenter(this);
-loadInfo("Germany");
+presenter.loadInfo("Germany");
         final Spinner spinner = findViewById(R.id.spinner);
      /*   NetworkService.getInstance()
                 .getJSONApi()
@@ -80,7 +82,7 @@ loadInfo("Germany");
         // Применяем адаптер к элементу spinner
       //  spinner.setAdapter(adapter);
     }
-    public void loadInfo(String country)
+  /*  public void loadInfo(String country)
     { Date dateNow = new Date(System.currentTimeMillis()-24*60*60*1000);
     Date DateYers=  new Date(System.currentTimeMillis()-2*24*60*60*1000);
         SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
@@ -106,5 +108,17 @@ loadInfo("Germany");
     }
 
 
+    }*/
+    public void ShowNumbConf(String value)
+    {
+        NumbConf.setText(value);
+    }
+    public void ShowNumbRecov(String value)
+    {
+        NumbRecov.setText(value);
+    }
+    public void ShowNumbDeath(String value)
+    {
+        NumbDeath.setText(value);
     }
 }
