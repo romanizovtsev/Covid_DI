@@ -9,7 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,34 +23,35 @@ import retrofit2.http.POST;
 public class MainActivity extends AppCompatActivity  {
 
     private String[] AllArray;
-
+private Presenter presenter;
+    TextView NumbConf,NumbRecov,NumbDeath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startactivity);
         TextView tv=findViewById(R.id.textView6);
 
-        final   String DateParam;
-        DateParam="dfff";
-        TextView NumbConf=findViewById(R.id.NumbConf);
-        TextView NumbRecov=findViewById(R.id.NumbRecov);
-        TextView NumbDeath=findViewById(R.id.NumbDeath);
 
+        NumbConf=findViewById(R.id.NumbConf);
+        NumbRecov=findViewById(R.id.NumbRecov);
+        NumbDeath=findViewById(R.id.NumbDeath);
+presenter=new Presenter(this);
+loadInfo("Germany");
         final Spinner spinner = findViewById(R.id.spinner);
-        NetworkService.getInstance()
+     /*   NetworkService.getInstance()
                 .getJSONApi()
                 .getPost("Germany","deaths")
                 .enqueue(new Callback<post1>() {
                     @Override
                     public void onResponse(@NonNull Call<post1> call, @NonNull Response<post1> response) {
-String content="";
+                        String content="";
                         if(response.body()!=null)
 
                             Log.e("Не 0","Точно");
                         post1 post = response.body();
                         if(response.isSuccessful()) {
-if(post!=null)
-                            NumbConf.append(post.getAll().getDates().get("2021-04-20") + "");
+                            if(post!=null)
+                                NumbConf.append(post.getAll().getDates().get("2021-04-20") + "");
 
                             NumbRecov.append(post.getAll().getDates().get("2021-04-19") + "");
                             NumbDeath.append(post.getAll().getDates().get("2021-04-18") + "");
@@ -59,32 +63,15 @@ if(post!=null)
                     @Override
                     public void onFailure(@NonNull Call<post1> call, @NonNull Throwable t) {
 
-                       NumbConf.append("Errooooor");
+                        NumbConf.append("Errooooor");
                         NumbRecov.append("Errooooor");
                         NumbDeath.append("Errooooor");
                         t.printStackTrace();
                     }
-                });
-       /* Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://covid-api.mmediagroup.fr/v1/")
-                .build();
-        Call<List<POST>>call=JsonPlaceHolderApi.getPost();
-        call.enqueue(new Callback<List<POST>>() {
-            @Override
-            public void onResponse(Call<List<POST>> call, Response<List<POST>> response) {
-                List<POST> posts=response.body();
+                });*/
 
-            }
+       // AllArray= getResources().getStringArray(R.array.Country);
 
-            @Override
-            public void onFailure(Call<List<POST>> call, Throwable t) {
-
-            }
-        });
-
-        JsonPlaceHolderApi service = retrofit.create(JsonPlaceHolderApi.class);
-        AllArray= getResources().getStringArray(R.array.Country);
-        */
 
         // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
         //ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, AllArray);
@@ -92,5 +79,32 @@ if(post!=null)
       //  adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Применяем адаптер к элементу spinner
       //  spinner.setAdapter(adapter);
+    }
+    public void loadInfo(String country)
+    { Date dateNow = new Date(System.currentTimeMillis()-24*60*60*1000);
+    Date DateYers=  new Date(System.currentTimeMillis()-2*24*60*60*1000);
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
+
+        Log.e("ДАТА",formatForDateNow.format(dateNow));
+        presenter.getInfoToday(country,"confirmed",formatForDateNow.format(DateYers));
+        presenter.getInfoToday(country,"confirmed",formatForDateNow.format(dateNow));
+        presenter.getInfoToday(country,"recovered",formatForDateNow.format(DateYers));
+        presenter.getInfoToday(country,"recovered",formatForDateNow.format(dateNow));
+        presenter.getInfoToday(country,"deaths",formatForDateNow.format(dateNow));
+        presenter.getInfoToday(country,"deaths",formatForDateNow.format(DateYers));
+
+    }
+    public void showInfo(Map<String,String> map)
+    {    for (Map.Entry<String, String> pair : map.entrySet())
+    {
+        String key = pair.getKey();                      //ключ
+        switch(key)
+        { case "confirmed": NumbConf.setText(pair.getValue()); break;
+            case "recovered": NumbRecov.setText(pair.getValue()); break;
+            case "deaths": NumbDeath.setText(pair.getValue()); break;
+        }
+    }
+
+
     }
 }
