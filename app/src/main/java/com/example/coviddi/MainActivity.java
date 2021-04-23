@@ -5,16 +5,26 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.coviddi.DataContract.DataDbHelper;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,20 +36,30 @@ public class MainActivity extends AppCompatActivity  {
 
     private String[] AllArray;
 private Presenter presenter;
+private int selected1;
     TextView NumbConf,NumbRecov,NumbDeath;
+    GraphView graphView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startactivity);
-        TextView tv=findViewById(R.id.textView6);
-
        DataDbHelper dh=new DataDbHelper(this);
         NumbConf=findViewById(R.id.NumbConf);
         NumbRecov=findViewById(R.id.NumbRecov);
         NumbDeath=findViewById(R.id.NumbDeath);
+        graphView=(GraphView) findViewById(R.id.graphView);
 presenter=new Presenter(this);
-presenter.loadInfo("Germany");
         final Spinner spinner = findViewById(R.id.spinner);
+        AllArray= getResources().getStringArray(R.array.Country);
+        // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, AllArray);
+        // Определяем разметку для использования при выборе элемента
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Применяем адаптер к элементу spinner
+        spinner.setAdapter(adapter);
+        int selected = spinner.getSelectedItemPosition();
+        presenter.loadInfo(selected);
+        presenter.releaseGraph();
      /*   NetworkService.getInstance()
                 .getJSONApi()
                 .getPost("Germany","deaths")
@@ -71,44 +91,18 @@ presenter.loadInfo("Germany");
                         t.printStackTrace();
                     }
                 });*/
-
-       // AllArray= getResources().getStringArray(R.array.Country);
-
-
-        // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
-        //ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, AllArray);
-        // Определяем разметку для использования при выборе элемента
-      //  adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Применяем адаптер к элементу spinner
-      //  spinner.setAdapter(adapter);
-    }
-  /*  public void loadInfo(String country)
-    { Date dateNow = new Date(System.currentTimeMillis()-24*60*60*1000);
-    Date DateYers=  new Date(System.currentTimeMillis()-2*24*60*60*1000);
-        SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
-
-        Log.e("ДАТА",formatForDateNow.format(dateNow));
-        presenter.getInfoToday(country,"confirmed",formatForDateNow.format(DateYers));
-        presenter.getInfoToday(country,"confirmed",formatForDateNow.format(dateNow));
-        presenter.getInfoToday(country,"recovered",formatForDateNow.format(DateYers));
-        presenter.getInfoToday(country,"recovered",formatForDateNow.format(dateNow));
-        presenter.getInfoToday(country,"deaths",formatForDateNow.format(dateNow));
-        presenter.getInfoToday(country,"deaths",formatForDateNow.format(DateYers));
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent,
+                                       View itemSelected, int selectedItemPosition, long selectedId) {
+               selected1=selectedItemPosition;
+                presenter.loadInfo(selected1);
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
     }
-    public void showInfo(Map<String,String> map)
-    {    for (Map.Entry<String, String> pair : map.entrySet())
-    {
-        String key = pair.getKey();                      //ключ
-        switch(key)
-        { case "confirmed": NumbConf.setText(pair.getValue()); break;
-            case "recovered": NumbRecov.setText(pair.getValue()); break;
-            case "deaths": NumbDeath.setText(pair.getValue()); break;
-        }
-    }
 
-
-    }*/
     public void ShowNumbConf(String value)
     {
         NumbConf.setText(value);
@@ -120,5 +114,32 @@ presenter.loadInfo("Germany");
     public void ShowNumbDeath(String value)
     {
         NumbDeath.setText(value);
+    }
+   /* public void releaseGraph(){
+        Integer dayOfMonth=20;
+        Random random = new Random();
+        Map<Calendar, Integer> graphMap = new HashMap<Calendar, Integer>();
+        for (int i=0;i<7;i++)
+            graphMap.put(new GregorianCalendar(2021,3,dayOfMonth+i), random.nextInt(11000)+3000);
+        Map<Calendar, Integer> sortedMap = new TreeMap<>(graphMap);
+
+        GraphView graphView=(GraphView) findViewById(R.id.graphView);
+        DataPoint[] Data= new DataPoint[sortedMap.size()];
+        int i=0;
+        for (Map.Entry<Calendar,Integer> pair : sortedMap.entrySet())
+        {
+            Calendar date = pair.getKey();
+            Integer confirmed = pair.getValue();
+            Data[i]=new DataPoint(date.get(Calendar.DAY_OF_MONTH), confirmed);
+            i++;
+        }
+        LineGraphSeries series= new LineGraphSeries<>(Data);
+        graphView.addSeries(series);
+        graphView.getGridLabelRenderer().setNumHorizontalLabels(Data.length);
+        //graphView.getViewport().setXAxisBoundsManual(true);
+    }*/
+    public String[] getCountry()
+    {
+        return getResources().getStringArray(R.array.CountryEn);
     }
 }

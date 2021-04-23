@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -160,11 +154,11 @@
         android:textSize="13sp"
         android:gravity="center_horizontal"/>
 
-    <ImageView
-        android:id="@+id/imageView"
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graphView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        app:srcCompat="@drawable/diagram" />
+        />
 
     <Button
         android:id="@+id/onfoBut"
