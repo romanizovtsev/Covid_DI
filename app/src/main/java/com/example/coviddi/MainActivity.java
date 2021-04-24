@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity  {
     private String[] AllArray;
 private Presenter presenter;
 private int selected1;
-    TextView NumbConf,NumbRecov,NumbDeath;
+    TextView NumbConf,NumbRecov,NumbDeath,DateText;
     GraphView graphView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ private int selected1;
         NumbConf=findViewById(R.id.NumbConf);
         NumbRecov=findViewById(R.id.NumbRecov);
         NumbDeath=findViewById(R.id.NumbDeath);
+        DateText=findViewById(R.id.Date);
         graphView=(GraphView) findViewById(R.id.graphView);
 presenter=new Presenter(this);
         final Spinner spinner = findViewById(R.id.spinner);
@@ -57,6 +58,7 @@ presenter=new Presenter(this);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Применяем адаптер к элементу spinner
         spinner.setAdapter(adapter);
+        presenter.setDatesGraph();
         /*selected1 = spinner.getSelectedItemPosition();
         presenter.loadInfo(selected1);*/
 

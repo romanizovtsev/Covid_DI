@@ -50,13 +50,16 @@ public class DataDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-// Запишем в журнал
-       /* Log.w("SQLite", "Обновляемся с версии " + oldVersion + " на версию " + newVersion);
+        Log.w("SQLite", "Обновляемся с версии " + oldVersion + " на версию " + newVersion);
 
         // Удаляем старую таблицу и создаём новую
-        db.execSQL("DROP TABLE IF IT EXISTS " + DATABASE_NAME);
-        // Создаём новую таблицу
-        onCreate(db);*/
+        //db.execSQL("DROP TABLE IF IT EXISTS " + DATABASE_NAME);
+        //onCreate(db);
+        if(newVersion>oldVersion) {
+            db.execSQL("DROP TABLE " + DATABASE_NAME);
+            onCreate(db);
+        }
+
     }
 }
 

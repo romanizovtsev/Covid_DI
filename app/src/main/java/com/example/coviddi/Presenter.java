@@ -50,7 +50,7 @@ public class Presenter {
         Date DateYers=  new Date(System.currentTimeMillis()-2*24*60*60*1000);
         SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
         model.DateNow=formatForDateNow.format(dateNow);
-        model.getFromSQL(country,"deaths","2021-04-22");
+        model.getFromSQL(country);
         Log.e("ДАТА",formatForDateNow.format(dateNow));
         model.getInfoToday(country,"confirmed",formatForDateNow.format(DateYers));
         model.getInfoToday(country,"confirmed",formatForDateNow.format(dateNow));
@@ -82,23 +82,29 @@ public void loadInfoGraph(int selected)
 { String country=view.getCountry()[selected];
     Date date;
     SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
-String[] dates=new String[7];
-
-for(int i=0;i<7;i++) {
+String[] dates=new String[8];
+    ArrayList<String> DateMas=new ArrayList<>();
+for(int i=7;i>=0;i--) {
     dates[i] = formatForDateNow.format(new Date(System.currentTimeMillis() - (i + 1) * 24 * 60 * 60 * 1000));
-    model.getInfoTodayGraph(country,dates[i]);
+    Log.e("Даты",dates[i]);
+    DateMas.add(dates[i]);
+
 }
 
+    model.getInfoTodayGraph(country,DateMas);
 
 
 }
     public void releaseGraph(Map<String,Integer> map){
+
         /*String dayOfMonth0=DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(Calendar.getInstance().getTime());
         String[] parts = dayOfMonth0.split("\\."); // String array, each element is text between dots
    int dayOfMonth1=Integer.parseInt(parts[0])-1;
 
        Log.e("DDD",dayOfMonth1+"");
         Random random = new Random();*/
+        view.graphView.removeAllSeries();
+        Log.e(map.size()+"","Размер мапки");
         Map<Calendar, Integer> graphMap = new HashMap<Calendar, Integer>();
         for (Map.Entry<String, Integer> pair : map.entrySet())
         {
@@ -121,8 +127,11 @@ for(int i=0;i<7;i++) {
         int i=0;
         for (Map.Entry<Calendar,Integer> pair : sortedMap.entrySet())
         {
+
             Calendar date = pair.getKey();
+
             Integer confirmed = pair.getValue();
+            Log.e(date.toString(),confirmed+"");
             Data[i]=new DataPoint(date.get(Calendar.DAY_OF_MONTH), confirmed);
             i++;
         }
@@ -130,6 +139,18 @@ for(int i=0;i<7;i++) {
 
         view.graphView.addSeries(series);
         view.graphView.getGridLabelRenderer().setNumHorizontalLabels(Data.length);
+        graphMap.clear();
+        sortedMap.clear();
+
         //graphView.getViewport().setXAxisBoundsManual(true);
     }
+    public void setDatesGraph()
+    {String date1,date2;
+        Date date;
+        SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "dd.MM.yyyy");
+        date1=formatForDateNow.format(new Date(System.currentTimeMillis() -  24 * 60 * 60 * 1000));
+        date2=formatForDateNow.format(new Date(System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000));
+        view.DateText.setText(date2+"-"+date1);
+    }
+
 }

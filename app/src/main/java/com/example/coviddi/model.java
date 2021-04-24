@@ -27,7 +27,7 @@ public class model {
     DataDbHelper dh;
     String countryNow="";
     String DateNow;
-    SQLiteDatabase db;
+    SQLiteDatabase dB;
     Presenter presenter;
     public model(Presenter pres)
     {
@@ -36,10 +36,11 @@ public class model {
     }
     Map<String,String> map=new HashMap<>();
     Map<String,Integer> mapGraph=new HashMap<>();
+    Map<String,Integer>Ask8= new HashMap();
     ArrayList<String> GraphListDate=new ArrayList<>();
     ArrayList<Integer> GraphListValue=new ArrayList<>();
     int flag=0;
-    public void getInfoTodayGraph(String country,String Date)
+    public void getInfoTodayGraph(String country,ArrayList<String> List)
     {clearAll(country);
     String status="confirmed";
         NetworkService.getInstance()
@@ -49,17 +50,26 @@ public class model {
                     @Override
                     public void onResponse(@NonNull Call<post1> call, @NonNull Response<post1> response) {
                         post1 post = response.body();
-                        GraphListDate.add(Date);
-                        GraphListValue.add(Integer.parseInt(post.getAll().getDates().get(Date)));
-                       if (GraphListValue.size()==7)
-                       {    for(int i=0;i<6;i++)
+                        for(int i=0;i<8;i++) {
+                            GraphListDate.add(List.get(i));
+                            GraphListValue.add(Integer.parseInt(post.getAll().getDates().get(List.get(i))));
+                        }
+                        Log.e("ПОЛУЧИЛ ДЛЯ ГРФИКА",GraphListValue.get(GraphListValue.size()-1)+"");
+                       if (GraphListValue.size()==8)
+                       {  int j=0;
+                           for(int i=0;i<7;i++)
                                  {
-                                     mapGraph.put(GraphListDate.get(i),abs(GraphListValue.get(i+1)-GraphListValue.get(i)));
+                                     j=i+1;
+                                     Log.e("В дату",GraphListDate.get(i+1) );
+                                     Log.e("В дату",abs(GraphListValue.get(j)-GraphListValue.get(i))+"" );
+
+                                     mapGraph.put(GraphListDate.get(i+1),abs(GraphListValue.get(i+1)-GraphListValue.get(i)));
                                  }
                                  presenter.releaseGraph(mapGraph);
                                 GraphListDate.clear();
                                 mapGraph.clear();
                                 GraphListValue.clear();
+
 
 
                        }
@@ -71,6 +81,7 @@ public class model {
                         t.printStackTrace();
                     }
                 });
+
     }
     public void getInfoToday(String country,String status,String Date)
     {Log.e("GET INFO",country);
@@ -108,15 +119,17 @@ public class model {
     }
     public void putToSQL(String country,Map <String,String>map,String Date)
     {
-        db = dh.getReadableDatabase();
+        dB = dh.getReadableDatabase();
         String formatString1 = "= '%s'";
         String insertQuerys1 =String.format(formatString1, DateNow);
         String insertQuerys2 =String.format(formatString1, country);
         String query = "SELECT * FROM "
                 + Data.DateData.TABLE_NAME+" WHERE "+Data.DateData.COLUMN_DATE+insertQuerys1+" AND "+Data.DateData.COLUMN_COUNTRY+insertQuerys2;
-        Cursor cursor2 = db.rawQuery(query, null);
+        Cursor cursor2 = dB.rawQuery(query, null);
         String confirmed="",recovered="",deaths="";
         if(cursor2.moveToNext()) {
+           // String insertQuery = "DROP TABLE " +Data.DateData.TABLE_NAME;
+           // db.execSQL(insertQuery);
 Log.e("Такая запись", "Уже есть");
         }
         else {
@@ -131,7 +144,7 @@ Log.e("Такая запись", "Уже есть");
         }
        String formatString = " VALUES ('%s','%s','%d','%d','%d')";
         String insertQuery1 =String.format(formatString, country,DateNow,Integer.parseInt(confirmed),Integer.parseInt(recovered),Integer.parseInt(deaths));
-            db = dh.getWritableDatabase();
+            dB = dh.getWritableDatabase();
             String insertQuery = "INSERT INTO " +
                     Data.DateData.TABLE_NAME +
                     " (" + Data.DateData.COLUMN_COUNTRY + ","
@@ -139,13 +152,13 @@ Log.e("Такая запись", "Уже есть");
                     + Data.DateData.COLUMN_CONFIRMED + ","
                     + Data.DateData.COLUMN_RECOVERED + ","
                     + Data.DateData.COLUMN_DEATHS + ")" + insertQuery1;
-            db.execSQL(insertQuery);
+            dB.execSQL(insertQuery);
         }
     }
-    public void getFromSQL(String country,String status,String Date)
+    public void getFromSQL(String country)
     {   Map<String,String>map=new HashMap<>();
         Log.e("LOG_TAG", "Зашел в sql");
-       db = dh.getReadableDatabase();
+       dB = dh.getReadableDatabase();
         String formatString = "= '%s'";
         String insertQuery1 =String.format(formatString, DateNow);
         String insertQuery2 =String.format(formatString, country);
@@ -154,7 +167,7 @@ Log.e("Такая запись", "Уже есть");
                 + Data.DateData.COLUMN_RECOVERED + ", "
                 + Data.DateData.COLUMN_DEATHS+ " FROM "
                 + Data.DateData.TABLE_NAME+" WHERE "+Data.DateData.COLUMN_DATE+insertQuery1+" AND "+Data.DateData.COLUMN_COUNTRY+insertQuery2;
-        Cursor cursor2 = db.rawQuery(query, null);
+        Cursor cursor2 = dB.rawQuery(query, null);
         if(cursor2.moveToNext()) {
             int id = cursor2.getInt(cursor2
                     .getColumnIndex(Data.DateData._ID));
