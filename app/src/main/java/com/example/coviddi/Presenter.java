@@ -9,6 +9,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,12 +78,42 @@ public Context getContexts()
 {
     return view.getApplicationContext();
 }
-    public void releaseGraph(){
-        Integer dayOfMonth=20;
-        Random random = new Random();
+public void loadInfoGraph(int selected)
+{ String country=view.getCountry()[selected];
+    Date date;
+    SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
+String[] dates=new String[7];
+
+for(int i=0;i<7;i++) {
+    dates[i] = formatForDateNow.format(new Date(System.currentTimeMillis() - (i + 1) * 24 * 60 * 60 * 1000));
+    model.getInfoTodayGraph(country,dates[i]);
+}
+
+
+
+}
+    public void releaseGraph(Map<String,Integer> map){
+        /*String dayOfMonth0=DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(Calendar.getInstance().getTime());
+        String[] parts = dayOfMonth0.split("\\."); // String array, each element is text between dots
+   int dayOfMonth1=Integer.parseInt(parts[0])-1;
+
+       Log.e("DDD",dayOfMonth1+"");
+        Random random = new Random();*/
         Map<Calendar, Integer> graphMap = new HashMap<Calendar, Integer>();
+        for (Map.Entry<String, Integer> pair : map.entrySet())
+        {
+            String Date = pair.getKey();
+            String[] parts = Date.split("-"); // String array, each element is text between dots
+            int dayOfMonth1=Integer.parseInt(parts[2]);
+            //ключ
+            graphMap.put(new GregorianCalendar(2021,3,dayOfMonth1), pair.getValue());
+        }
+
+       /* Map<Calendar, Integer> graphMap = new HashMap<Calendar, Integer>();
         for (int i=0;i<7;i++)
-            graphMap.put(new GregorianCalendar(2021,3,dayOfMonth+i), random.nextInt(11000)+3000);
+            graphMap.put(new GregorianCalendar(2021,3,dayOfMonth1-i), random.nextInt(11000)+3000);
+
+        */
         Map<Calendar, Integer> sortedMap = new TreeMap<>(graphMap);
 
 

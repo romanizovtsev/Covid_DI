@@ -57,9 +57,9 @@ presenter=new Presenter(this);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Применяем адаптер к элементу spinner
         spinner.setAdapter(adapter);
-        int selected = spinner.getSelectedItemPosition();
-        presenter.loadInfo(selected);
-        presenter.releaseGraph();
+        /*selected1 = spinner.getSelectedItemPosition();
+        presenter.loadInfo(selected1);*/
+
      /*   NetworkService.getInstance()
                 .getJSONApi()
                 .getPost("Germany","deaths")
@@ -96,6 +96,7 @@ presenter=new Presenter(this);
                                        View itemSelected, int selectedItemPosition, long selectedId) {
                selected1=selectedItemPosition;
                 presenter.loadInfo(selected1);
+                presenter.loadInfoGraph(selected1);
             }
             public void onNothingSelected(AdapterView<?> parent) {
             }
