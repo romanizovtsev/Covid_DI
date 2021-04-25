@@ -1,7 +1,10 @@
 package com.example.coviddi;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 
@@ -27,6 +30,9 @@ import retrofit2.Response;
 import static java.lang.Math.abs;
 
 public class Presenter {
+    ImageButton button_settings;
+    Button Read_info;
+    Button Start_test;
     private MainActivity view;
     private final model model;
 
@@ -151,6 +157,10 @@ for(int i=7;i>=0;i--) {
         date1=formatForDateNow.format(new Date(System.currentTimeMillis() -  24 * 60 * 60 * 1000));
         date2=formatForDateNow.format(new Date(System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000));
         view.DateText.setText(date2+"-"+date1);
+    }
+
+    public void Settings_Open(){
+
     }
 
 }
