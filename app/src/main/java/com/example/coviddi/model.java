@@ -205,9 +205,11 @@ public class model {
                     + Data.DataGraphin.TABLE_NAME + " WHERE " + Data.DataGraphin.COLUMN_COUNTRY + insertQuerys2;
             cursor2 = dB.rawQuery(query, null);
             cursor2.moveToLast();
-            int id = cursor2.getInt(cursor2
-                    .getColumnIndex(Data.DataGraphin._ID));
-            cursor2.moveToFirst();
+         
+            for(int i=0;i<6;i++)
+            {
+                cursor2.moveToPrevious();
+            }
             TipoMap.add(cursor2.getString(cursor2
                     .getColumnIndex(Data.DataGraphin.COLUMN_DATE)) + "%" + cursor2.getString(cursor2
                     .getColumnIndex(Data.DataGraphin.COLUMN_CONFIRMED)));
