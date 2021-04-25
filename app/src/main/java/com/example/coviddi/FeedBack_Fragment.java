@@ -9,11 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class FeedBack_Fragment extends AppCompatDialogFragment {
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         return builder
                 .setTitle("FeedBack")

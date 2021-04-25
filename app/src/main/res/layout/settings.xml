@@ -37,7 +37,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Settings"
+                android:text="@string/Settings"
                 android:textColor="@color/white"
                 android:textSize="30sp" />
 
@@ -69,7 +69,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"
                 android:layout_weight="1"
-                android:text="Button"
                 android:visibility="invisible"
                 tools:visibility="invisible" />
 
@@ -81,7 +80,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_rus"
-                android:text="RUS"
+                android:text="@string/RUS"
                 android:textColor="@color/white" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -92,7 +91,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_rus"
-                android:text="EN"
+                android:text="@string/EN"
                 android:textColor="@color/white" />
         </LinearLayout>
 

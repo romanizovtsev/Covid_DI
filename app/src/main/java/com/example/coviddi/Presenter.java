@@ -35,7 +35,6 @@ public class Presenter {
     Button Start_test;
     private MainActivity view;
     private final model model;
-
     public Presenter(MainActivity view1)
     {
         this.view=view1;
@@ -45,12 +44,12 @@ public class Presenter {
         view = mainActivity;
 
     }
-
     public void detachView() {
         view = null;
     }
     public void loadInfo(int selected)
-    {Log.e("Зашел в презентер",selected+"");
+    {
+        Log.e("Зашел в презентер",selected+"");
         String country=view.getCountry()[selected];
         Date dateNow = new Date(System.currentTimeMillis()-24*60*60*1000);
         Date DateYers=  new Date(System.currentTimeMillis()-2*24*60*60*1000);
@@ -67,11 +66,13 @@ public class Presenter {
 
     }
     public void showInfo(Map<String,String> map)
-    {    for (Map.Entry<String, String> pair : map.entrySet())
+    {
+        for (Map.Entry<String, String> pair : map.entrySet())
     {
         String key = pair.getKey();                      //ключ
         switch(key)
-        { case "confirmed": view.ShowNumbConf(pair.getValue()); break;
+        {
+            case "confirmed": view.ShowNumbConf(pair.getValue()); break;
             case "recovered": view.ShowNumbRecov(pair.getValue()); break;
             case "deaths": view.ShowNumbDeath(pair.getValue()); break;
         }
@@ -82,24 +83,23 @@ public class Presenter {
 
 public Context getContexts()
 {
+
     return view.getApplicationContext();
 }
 public void loadInfoGraph(int selected)
-{ String country=view.getCountry()[selected];
+{
+    String country=view.getCountry()[selected];
     Date date;
     SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
-String[] dates=new String[8];
+    String[] dates=new String[8];
     ArrayList<String> DateMas=new ArrayList<>();
-for(int i=7;i>=0;i--) {
-    dates[i] = formatForDateNow.format(new Date(System.currentTimeMillis() - (i + 1) * 24 * 60 * 60 * 1000));
-    Log.e("Даты",dates[i]);
-    DateMas.add(dates[i]);
-
+    for(int i=7;i>=0;i--) {
+        dates[i] = formatForDateNow.format(new Date(System.currentTimeMillis() - (i + 1) * 24 * 60 * 60 * 1000));
+        Log.e("Даты",dates[i]);
+        DateMas.add(dates[i]);
 }
 
     model.getInfoTodayGraph(country,DateMas);
-
-
 }
     public void releaseGraph(Map<String,Integer> map){
 
@@ -127,15 +127,12 @@ for(int i=7;i>=0;i--) {
 
         */
         Map<Calendar, Integer> sortedMap = new TreeMap<>(graphMap);
-
-
         DataPoint[] Data= new DataPoint[sortedMap.size()];
         int i=0;
         for (Map.Entry<Calendar,Integer> pair : sortedMap.entrySet())
         {
 
             Calendar date = pair.getKey();
-
             Integer confirmed = pair.getValue();
             Log.e(date.toString(),confirmed+"");
             Data[i]=new DataPoint(date.get(Calendar.DAY_OF_MONTH), confirmed);

@@ -18,7 +18,6 @@ import java.util.Locale;
 
 public class Settings_Activity extends AppCompatActivity {
     Dialog dialog;//Окно диалога
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +71,6 @@ public class Settings_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    //смена локали на английскую
                     Locale locale = new Locale("en");
                 }catch (Exception e){
                 }
@@ -100,11 +98,8 @@ public class Settings_Activity extends AppCompatActivity {
  @Override
     public void onBackPressed() {
         try{
-            //есть намерение перейти из Game_levels, втором мы сейчас в Level1
             Intent intent=new Intent(Settings_Activity.this,  MainActivity.class);
-            //реализуем это намерение
             startActivity(intent);
-            //закраем предыдущее окно (Game_levels)
             finish();
         }catch(Exception e){}
     }

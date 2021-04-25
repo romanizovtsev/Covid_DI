@@ -38,7 +38,6 @@ import retrofit2.Retrofit;
 import retrofit2.http.POST;
 
 public class MainActivity extends AppCompatActivity  {
-
     private String[] AllArray;
     private Presenter presenter;
     private int selected1;
@@ -49,24 +48,21 @@ public class MainActivity extends AppCompatActivity  {
     Button Start_test;
     private long backPressedTime;
     private Toast backToast;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startactivity);
-       DataDbHelper dh=new DataDbHelper(this);
-
+        DataDbHelper dh=new DataDbHelper(this);
 
         button_settings=(ImageButton)findViewById(R.id.Settings_Button);
         Read_info=(Button)findViewById(R.id.onfoBut);
         Start_test=(Button)findViewById(R.id.TestBut);
-
         NumbConf=findViewById(R.id.NumbConf);
         NumbRecov=findViewById(R.id.NumbRecov);
         NumbDeath=findViewById(R.id.NumbDeath);
         DateText=findViewById(R.id.Date);
         graphView=(GraphView) findViewById(R.id.graphView);
-presenter=new Presenter(this);
+        presenter=new Presenter(this);
         final Spinner spinner = findViewById(R.id.spinner);
         AllArray= getResources().getStringArray(R.array.Country);
         // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
@@ -110,10 +106,9 @@ presenter=new Presenter(this);
                         t.printStackTrace();
                     }
                 });*/
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent,
-                                       View itemSelected, int selectedItemPosition, long selectedId) {
-               selected1=selectedItemPosition;
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View itemSelected, int selectedItemPosition, long selectedId) {
+                selected1=selectedItemPosition;
                 presenter.loadInfo(selected1);
                 presenter.loadInfoGraph(selected1);
             }

@@ -16,7 +16,6 @@ public class InfoActivity extends AppCompatActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.info_activity);
         Back_Info=(ImageView)findViewById(R.id.info_back);
-
         Back_Info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,12 +33,8 @@ public class InfoActivity extends AppCompatActivity {
     public void onBackPressed() {
         try{
             Intent intent=new Intent(InfoActivity.this,  MainActivity.class);
-            //реализуем это намерение
             startActivity(intent);
-            //закраем предыдущее окно (Game_levels)
             finish();
         }catch(Exception e){}
     }
-
-
 }

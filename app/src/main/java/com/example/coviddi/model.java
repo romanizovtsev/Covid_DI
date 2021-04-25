@@ -23,12 +23,12 @@ import retrofit2.Response;
 import static java.lang.Math.abs;
 
 public class model {
-    int flag2=0;
     DataDbHelper dh;
     String countryNow="";
     String DateNow;
     SQLiteDatabase dB;
     Presenter presenter;
+
     public model(Presenter pres)
     {
         this.presenter=pres;
@@ -69,12 +69,7 @@ public class model {
                                 GraphListDate.clear();
                                 mapGraph.clear();
                                 GraphListValue.clear();
-
-
-
                        }
-
-
                     }
                     @Override
                     public void onFailure(@NonNull Call<post1> call, @NonNull Throwable t) {
@@ -85,65 +80,61 @@ public class model {
     }
     public void getInfoToday(String country,String status,String Date)
     {Log.e("GET INFO",country);
-        clearAll(country);
-        NetworkService.getInstance()
-                .getJSONApi()
-                .getPost(country,status)
-                .enqueue(new Callback<post1>() {
-                    @Override
-                    public void onResponse(@NonNull Call<post1> call, @NonNull Response<post1> response) {
-                        post1 post = response.body();
-                        if(!map.containsKey(status)) {
-                            map.put(status, post.getAll().getDates().get(Date) + "");
-                            Log.e(status,"Первый занос");
+    clearAll(country);
+    NetworkService.getInstance()
+            .getJSONApi()
+            .getPost(country,status)
+            .enqueue(new Callback<post1>() {
+                @Override
+                public void onResponse(@NonNull Call<post1> call, @NonNull Response<post1> response) {
+                    post1 post = response.body();
+                    if(!map.containsKey(status)) {
+                        map.put(status, post.getAll().getDates().get(Date) + "");
+                        Log.e(status,"Первый занос");
                         }
-                        else {
-                            map.put(status, abs(Integer.parseInt(post.getAll().getDates().get(Date) + "") - Integer.parseInt(map.get(status))) + "");
-                            Log.e("Выполнено вычитание", status);
-                            flag++;
-                            Log.e("dddddddddddddd",flag+"");
+                    else {
+                        map.put(status, abs(Integer.parseInt(post.getAll().getDates().get(Date) + "") - Integer.parseInt(map.get(status))) + "");
+                        Log.e("Выполнено вычитание", status);
+                        flag++;
+                        Log.e("dddddddddddddd",flag+"");
                         }
-                        if((map.size()==3)&&(flag==3)){
-                            presenter.showInfo(map);
-                            flag=0;
-                            putToSQL(country,map,DateNow);
-                            Log.e("вызвана","Шоу инфо");
-                            map.clear();
+                    if((map.size()==3)&&(flag==3)){
+                        presenter.showInfo(map);
+                        flag=0;
+                        putToSQL(country,map,DateNow);
+                        Log.e("вызвана","Шоу инфо");
+                        map.clear();
                         }
-                    }
-                    @Override
-                    public void onFailure(@NonNull Call<post1> call, @NonNull Throwable t) {
-                        t.printStackTrace();
+                }@Override
+                public void onFailure(@NonNull Call<post1> call, @NonNull Throwable t) {
+                    t.printStackTrace();
                     }
                 });
     }
-    public void putToSQL(String country,Map <String,String>map,String Date)
-    {
+    public void putToSQL(String country,Map <String,String>map,String Date) {
         dB = dh.getReadableDatabase();
         String formatString1 = "= '%s'";
         String insertQuerys1 =String.format(formatString1, DateNow);
         String insertQuerys2 =String.format(formatString1, country);
-        String query = "SELECT * FROM "
-                + Data.DateData.TABLE_NAME+" WHERE "+Data.DateData.COLUMN_DATE+insertQuerys1+" AND "+Data.DateData.COLUMN_COUNTRY+insertQuerys2;
+        String query = "SELECT * FROM " + Data.DateData.TABLE_NAME+" WHERE "+Data.DateData.COLUMN_DATE+insertQuerys1+" AND "+Data.DateData.COLUMN_COUNTRY+insertQuerys2;
         Cursor cursor2 = dB.rawQuery(query, null);
         String confirmed="",recovered="",deaths="";
         if(cursor2.moveToNext()) {
            // String insertQuery = "DROP TABLE " +Data.DateData.TABLE_NAME;
            // db.execSQL(insertQuery);
-Log.e("Такая запись", "Уже есть");
+            Log.e("Такая запись", "Уже есть");
         }
         else {
-            for (Map.Entry<String, String> pair : map.entrySet())
-                {
-                     String key = pair.getKey();                      //ключ
-                        switch(key)
-                             { case "confirmed": confirmed=pair.getValue(); break;
-                                case "recovered": recovered=pair.getValue(); break;
-                                case "deaths": deaths=pair.getValue(); break;
+            for (Map.Entry<String, String> pair : map.entrySet()) {
+                String key = pair.getKey();                      //ключ
+                switch(key) {
+                    case "confirmed": confirmed=pair.getValue(); break;
+                    case "recovered": recovered=pair.getValue(); break;
+                    case "deaths": deaths=pair.getValue(); break;
                              }
         }
-       String formatString = " VALUES ('%s','%s','%d','%d','%d')";
-        String insertQuery1 =String.format(formatString, country,DateNow,Integer.parseInt(confirmed),Integer.parseInt(recovered),Integer.parseInt(deaths));
+            String formatString = " VALUES ('%s','%s','%d','%d','%d')";
+            String insertQuery1 =String.format(formatString, country,DateNow,Integer.parseInt(confirmed),Integer.parseInt(recovered),Integer.parseInt(deaths));
             dB = dh.getWritableDatabase();
             String insertQuery = "INSERT INTO " +
                     Data.DateData.TABLE_NAME +

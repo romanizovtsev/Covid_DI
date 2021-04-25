@@ -20,6 +20,10 @@
     <string name="ConfTitle">Подтвержденные \n случаи</string>
     <string name="RecovTitle">Выздоровевших</string>
     <string name="DeathTitle">Смертей</string>
+    <string name="Settings">Settings</string>
+    <string name="RUS">RUS</string>
+    <string name="date">20.03.2021-27.03.2021</string>
+    <string name="EN">EN</string>
     <string name="InfoBut">Ознакомьтесь с информацией о коронавирусе</string>
     <string name="TestBut">Пройдите тест на знание короновируса</string>
 
