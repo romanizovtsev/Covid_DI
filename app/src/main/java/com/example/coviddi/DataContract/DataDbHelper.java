@@ -40,9 +40,16 @@ public class DataDbHelper extends SQLiteOpenHelper {
                 + Data.DateData.COLUMN_CONFIRMED + " INTEGER NOT NULL DEFAULT 0, "
                 + Data.DateData.COLUMN_RECOVERED + " INTEGER NOT NULL DEFAULT 0, "
                 + Data.DateData.COLUMN_DEATHS + " INTEGER NOT NULL DEFAULT 0);";
+        String SQL_CREATE_DATA_TABLE2 = "CREATE TABLE " + Data.DataGraphin.TABLE_NAME+ " ("
+                + Data.DateData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + Data.DateData.COLUMN_COUNTRY + " TEXT NOT NULL, "
+                + Data.DateData.COLUMN_DATE + " TEXT NOT NULL, "
+                + Data.DateData.COLUMN_CONFIRMED + " INTEGER NOT NULL DEFAULT 0);";
+
 
         // Запускаем создание таблицы
         db.execSQL(SQL_CREATE_DATA_TABLE);
+        db.execSQL(SQL_CREATE_DATA_TABLE2);
     }
 
     /**

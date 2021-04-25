@@ -1,16 +1,27 @@
 package com.example.coviddi;
 
 import android.content.Context;
+
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.graphics.PointF;
+import android.view.Gravity;
+import android.widget.Toast;
+
+
 
 import androidx.annotation.NonNull;
 
+import com.example.coviddi.DataContract.Data;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.PointsGraphSeries;
+import com.jjoe64.graphview.series.Series;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +32,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 
 import retrofit2.Call;
@@ -35,6 +48,7 @@ public class Presenter {
     Button Start_test;
     private MainActivity view;
     private final model model;
+
     public Presenter(MainActivity view1)
     {
         this.view=view1;
@@ -94,13 +108,20 @@ public void loadInfoGraph(int selected)
     String[] dates=new String[8];
     ArrayList<String> DateMas=new ArrayList<>();
     for(int i=7;i>=0;i--) {
+
         dates[i] = formatForDateNow.format(new Date(System.currentTimeMillis() - (i + 1) * 24 * 60 * 60 * 1000));
         Log.e("Даты",dates[i]);
         DateMas.add(dates[i]);
+
+
+
 }
 
     model.getInfoTodayGraph(country,DateMas);
 }
+    private Toast toastMessage;
+    private PointsGraphSeries<DataPoint> dotSeries;
+
     public void releaseGraph(Map<String,Integer> map){
 
         /*String dayOfMonth0=DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(Calendar.getInstance().getTime());
@@ -138,21 +159,52 @@ public void loadInfoGraph(int selected)
             Data[i]=new DataPoint(date.get(Calendar.DAY_OF_MONTH), confirmed);
             i++;
         }
-        LineGraphSeries series= new LineGraphSeries<>(Data);
 
+        LineGraphSeries series= new LineGraphSeries<>(Data);
         view.graphView.addSeries(series);
+
+        dotSeries = new PointsGraphSeries<>();
+        view.graphView.addSeries(dotSeries);
+
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+
+
+                int cases = (int)dataPoint.getY();
+                int day = (int)dataPoint.getX();
+                int lastDay = (int)series.getHighestValueX();
+                int difference = lastDay - day;
+                String date;
+                SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "dd.MM.yyyy");
+                date=formatForDateNow.format(new Date(System.currentTimeMillis() -  (difference+1)*24 * 60 * 60 * 1000));
+                String msg = date+"\n"+Integer.toString(cases);
+                DataPoint[] Data= new DataPoint[1];
+                Data[0]= new DataPoint(dataPoint.getX(),dataPoint.getY());
+                dotSeries.resetData(Data);
+                if (toastMessage != null) toastMessage.cancel();
+                toastMessage=Toast.makeText(getContexts(), msg, Toast.LENGTH_LONG);
+                toastMessage.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toastMessage.show();
+                Data = null;
+
+
+            }
+        });
         view.graphView.getGridLabelRenderer().setNumHorizontalLabels(Data.length);
         graphMap.clear();
         sortedMap.clear();
 
-        //graphView.getViewport().setXAxisBoundsManual(true);
+        view.graphView.getViewport().setXAxisBoundsManual(true);
     }
+
+
     public void setDatesGraph()
     {String date1,date2;
         Date date;
         SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "dd.MM.yyyy");
         date1=formatForDateNow.format(new Date(System.currentTimeMillis() -  24 * 60 * 60 * 1000));
-        date2=formatForDateNow.format(new Date(System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000));
+        date2=formatForDateNow.format(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000));
         view.DateText.setText(date2+"-"+date1);
     }
 
