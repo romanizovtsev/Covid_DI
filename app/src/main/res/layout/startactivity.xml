@@ -33,7 +33,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/Settings_Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -149,7 +149,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="20.03.2021-27.03.2021"
+        android:text="@string/date"
         android:textColor="@color/black"
         android:textSize="13sp"
         android:gravity="center_horizontal"/>

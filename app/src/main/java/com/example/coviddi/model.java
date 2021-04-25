@@ -22,6 +22,7 @@ public class model {
     SQLiteDatabase dB;
     Presenter presenter;
 
+
     public model(Presenter pres) {
         this.presenter = pres;
         this.dh = new DataDbHelper(presenter.getContexts());
@@ -51,6 +52,7 @@ public class model {
                             GraphListDate.add(List.get(i));
                             GraphListValue.add(Integer.parseInt(post.getAll().getDates().get(List.get(i))));
                         }
+
                         if (GraphListValue.size() == 8) {
                             int j = 0;
                             for (int i = 0; i < 7; i++) {
@@ -63,6 +65,7 @@ public class model {
                             mapGraph.clear();
                             GraphListValue.clear();
                         }
+
                     }
 
                     @Override
@@ -71,6 +74,7 @@ public class model {
                     }
                 });
     }
+
 
     public void getInfoToday(String country, String status, String Date) {
         clearAll(country);
@@ -105,11 +109,13 @@ public class model {
 
     public void putToSQLGraph(String country, ArrayList<String> TipoMap) {
 
+
         dB = dh.getReadableDatabase();
         /*String insertQuery4 = "DROP TABLE " +Data.DataGraphin.TABLE_NAME;
         dB.execSQL(insertQuery4);*/
         int raznost = 0;
         String formatString1 = "= '%s'";
+
         String insertQuerys2 = String.format(formatString1, country);
         String query = "SELECT * FROM "
                 + Data.DataGraphin.TABLE_NAME + " WHERE " + Data.DataGraphin.COLUMN_COUNTRY + insertQuerys2;
@@ -177,6 +183,7 @@ public class model {
             }
             String formatString = " VALUES ('%s','%s','%d','%d','%d')";
             String insertQuery1 = String.format(formatString, country, DateNow, Integer.parseInt(confirmed), Integer.parseInt(recovered), Integer.parseInt(deaths));
+
             dB = dh.getWritableDatabase();
             String insertQuery = "INSERT INTO " +
                     Data.DateData.TABLE_NAME +

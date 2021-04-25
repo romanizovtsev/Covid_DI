@@ -9,30 +9,24 @@ import java.util.Map;
 
 public class post1 {
 
-
-
-
     @SerializedName("All")
     @Expose
     private All all;
-
     public All getAll() {
         return all;
     }
-
     public void setAll(All all) {
         this.all = all;
     }
     public class All {
-
         @SerializedName("country")
         @Expose
         private String country;
         @SerializedName("dates")
         @Expose
         Map<String, String> dates;
-
         public Map<String, String> getDates() {
+
             return dates;
         }
         /*  @SerializedName("dates")

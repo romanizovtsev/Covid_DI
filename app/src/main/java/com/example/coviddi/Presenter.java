@@ -1,10 +1,15 @@
 package com.example.coviddi;
 
 import android.content.Context;
-import android.graphics.PointF;
+
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.graphics.PointF;
 import android.view.Gravity;
 import android.widget.Toast;
+
 
 
 import androidx.annotation.NonNull;
@@ -38,9 +43,11 @@ import retrofit2.Response;
 import static java.lang.Math.abs;
 
 public class Presenter {
+    ImageButton button_settings;
+    Button Read_info;
+    Button Start_test;
     private MainActivity view;
     private final model model;
-
 
     public Presenter(MainActivity view1)
     {
@@ -51,12 +58,12 @@ public class Presenter {
         view = mainActivity;
 
     }
-
     public void detachView() {
         view = null;
     }
     public void loadInfo(int selected)
-    {Log.e("Зашел в презентер",selected+"");
+    {
+        Log.e("Зашел в презентер",selected+"");
         String country=view.getCountry()[selected];
         Date dateNow = new Date(System.currentTimeMillis()-24*60*60*1000);
         Date DateYers=  new Date(System.currentTimeMillis()-2*24*60*60*1000);
@@ -73,11 +80,13 @@ public class Presenter {
 
     }
     public void showInfo(Map<String,String> map)
-    {    for (Map.Entry<String, String> pair : map.entrySet())
+    {
+        for (Map.Entry<String, String> pair : map.entrySet())
     {
         String key = pair.getKey();                      //ключ
         switch(key)
-        { case "confirmed": view.ShowNumbConf(pair.getValue()); break;
+        {
+            case "confirmed": view.ShowNumbConf(pair.getValue()); break;
             case "recovered": view.ShowNumbRecov(pair.getValue()); break;
             case "deaths": view.ShowNumbDeath(pair.getValue()); break;
         }
@@ -88,24 +97,27 @@ public class Presenter {
 
 public Context getContexts()
 {
+
     return view.getApplicationContext();
 }
 public void loadInfoGraph(int selected)
-{ String country=view.getCountry()[selected];
+{
+    String country=view.getCountry()[selected];
     Date date;
     SimpleDateFormat formatForDateNow = new SimpleDateFormat(   "yyyy-MM-dd");
     String[] dates=new String[8];
     ArrayList<String> DateMas=new ArrayList<>();
     for(int i=7;i>=0;i--) {
-    dates[i] = formatForDateNow.format(new Date(System.currentTimeMillis() - (i +1) * 24 * 60 * 60 * 1000));
-    Log.e("Даты",dates[i]);
-    DateMas.add(dates[i]);
+
+        dates[i] = formatForDateNow.format(new Date(System.currentTimeMillis() - (i + 1) * 24 * 60 * 60 * 1000));
+        Log.e("Даты",dates[i]);
+        DateMas.add(dates[i]);
+
+
 
 }
 
     model.getInfoTodayGraph(country,DateMas);
-
-
 }
     private Toast toastMessage;
     private PointsGraphSeries<DataPoint> dotSeries;
@@ -136,15 +148,12 @@ public void loadInfoGraph(int selected)
 
         */
         Map<Calendar, Integer> sortedMap = new TreeMap<>(graphMap);
-
-
         DataPoint[] Data= new DataPoint[sortedMap.size()];
         int i=0;
         for (Map.Entry<Calendar,Integer> pair : sortedMap.entrySet())
         {
 
             Calendar date = pair.getKey();
-
             Integer confirmed = pair.getValue();
             Log.e(date.toString(),confirmed+"");
             Data[i]=new DataPoint(date.get(Calendar.DAY_OF_MONTH), confirmed);
@@ -197,6 +206,10 @@ public void loadInfoGraph(int selected)
         date1=formatForDateNow.format(new Date(System.currentTimeMillis() -  24 * 60 * 60 * 1000));
         date2=formatForDateNow.format(new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000));
         view.DateText.setText(date2+"-"+date1);
+    }
+
+    public void Settings_Open(){
+
     }
 
 }

@@ -7,7 +7,6 @@ public class NetworkService {
     private static NetworkService mInstance;
     private static final String BASE_URL = "https://covid-api.mmediagroup.fr/v1/";
     private Retrofit mRetrofit;
-
     private NetworkService() {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
