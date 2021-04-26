@@ -212,7 +212,7 @@ public class model {
                     + Data.DataGraphin.TABLE_NAME + " WHERE " + Data.DataGraphin.COLUMN_COUNTRY + insertQuerys2;
             cursor2 = dB.rawQuery(query, null);
             cursor2.moveToLast();
-         
+
             for(int i=0;i<6;i++)
             {
                 cursor2.moveToPrevious();
